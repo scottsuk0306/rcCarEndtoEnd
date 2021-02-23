@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 from tensorflow.keras.models import load_model
+import tensorflow as tf
 import os
 import pandas as pd
 import numpy as np
@@ -24,7 +25,7 @@ def normalize(img):
     return img
 
 def load_numpy_image(img):
-    num_img = np.array(img)
+    num_img = np.array(img, dtype=np.float64)
     num_img = normalize(num_img)
     num_img = np.expand_dims(num_img, 0)
     return num_img
@@ -37,15 +38,17 @@ def main():
 
 if __name__ == '__main__':
     dataset_path = "~/rcCarEndtoEnd/"
-    model_path = os.path.join(dataset_path,"model/PilotNet_v1-004-0.02398.h5")
-    model = load_model("../PilotNet_v1-001-0.04877.h5")
+    model_path = os.path.join(dataset_path,"model/PilotNet_v3-014-0.01591.h5")
+    # model = tf.saved_model.load("./")
+    model = load_model("PilotNet_v3-014-0.01591.h5")	
     print("Model is ready!")
     # df = pd.read_csv(dataset_path)
     # img_path = img_to_arr(os.path.join(dataset_path, df['image_name'][0]))
-    image_name = "../sample_image.jpeg"
-    sample_img = Image.open(image_name)
+    image_name = "../sample_data/sample_image.jpeg"
+    sample_img = Image.open("./sample_image.jpeg")
     sample_img = load_numpy_image(sample_img)
+    print("this is executed")
     result = model.predict(sample_img)
     # round result to integer value
-    result = int(round((result*800)+1100))
-    print result
+    result = int((result*800)+1100)
+    print(result)
